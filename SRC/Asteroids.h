@@ -9,6 +9,11 @@
 #include "ScoreKeeper.h"
 #include "Player.h"
 #include "IPlayerListener.h"
+#include "Bonus.h"
+/*#include "EnemySpaceship.h"
+#include "IEnemyListener.h"
+#include <vector>
+*/
 
 class GameObject;
 class Spaceship;

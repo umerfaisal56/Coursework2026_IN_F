@@ -22,6 +22,9 @@ Asteroid::~Asteroid(void)
 bool Asteroid::CollisionTest(shared_ptr<GameObject> o)
 {
 	if (GetType() == o->GetType()) return false;
+	if (o->GetType() == GameObjectType("Bonus")) return false;
+	if (o->GetType() == GameObjectType("EnemySpaceship")) return false;
+	if (o->GetType() == GameObjectType("EnemyBullet")) return false;
 	if (mBoundingShape.get() == NULL) return false;
 	if (o->GetBoundingShape().get() == NULL) return false;
 	return mBoundingShape->CollisionTest(o->GetBoundingShape());
@@ -30,4 +33,14 @@ bool Asteroid::CollisionTest(shared_ptr<GameObject> o)
 void Asteroid::OnCollision(const GameObjectList& objects)
 {
 	mWorld->FlagForRemoval(GetThisPtr());
+}
+
+bool Asteroid::canSplit()
+{
+	return split;
+}
+
+void Asteroid::setSplit(bool split)
+{
+	this->split = split;
 }

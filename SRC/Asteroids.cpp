@@ -139,8 +139,29 @@ void Asteroids::OnObjectRemoved(GameWorld* world, shared_ptr<GameObject> object)
 		shared_ptr<GameObject> explosion = CreateExplosion();
 		explosion->SetPosition(object->GetPosition());
 		explosion->SetRotation(object->GetRotation());
+		explosion->SetScale(0.5f);
+
+		if (((Asteroid*)object.get())->canSplit()) {
+			for (int i = 0; i < 2; i++) {
+				Animation* anim_ptr2 = AnimationManager::GetInstance().GetAnimationByName("asteroid1");
+				shared_ptr<Sprite> asteroid_sprite
+				      = make_shared<Sprite>(anim_ptr2->GetWidth(), anim_ptr2->GetHeight(), anim_ptr2);
+				asteroid_sprite->SetLoopAnimation(true);
+				shared_ptr<GameObject> asteroid = make_shared<Asteroid>();
+				asteroid->SetPosition(object->GetPosition());
+				asteroid->SetBoundingShape(make_shared<BoundingSphere>(asteroid->GetThisPtr(), 10.0f));
+				asteroid->SetSprite(asteroid_sprite);
+				asteroid->SetScale(0.1f);
+				((Asteroid*)asteroid.get())->setSplit(false);
+				mGameWorld->AddObject(asteroid);
+				mAsteroidCount++;
+			}
+		}
 		mGameWorld->AddObject(explosion);
 		mAsteroidCount--;
+		if (mAsteroidCount == 5) {
+			mGameWorld->AddObject(CreateBonus());
+		}
 		if (mAsteroidCount <= 0) 
 		{ 
 			SetTimer(500, START_NEXT_LEVEL); 
@@ -168,6 +189,9 @@ void Asteroids::OnTimer(int value)
 	if (value == SHOW_GAME_OVER)
 	{
 		mGameOverLabel->SetVisible(true);
+		//Saving Score
+		//saveScore();
+		//readTop5HighScore();
 	}
 
 }
@@ -209,6 +233,21 @@ void Asteroids::CreateAsteroids(const uint num_asteroids)
 		mGameWorld->AddObject(asteroid);
 	}
 }
+
+shared_ptr<GameObject> Asteroids::CreateBonus()
+{
+	shared_ptr<GameObject> bonus = make_shared<Bonus>();
+	bonus->SetBoundingShape(make_shared<BoundingSphere>(bonus->GetThisPtr(), 4.0f));
+	Animation* anim_ptr = AnimationManager::GetInstance().GetAnimationByName("live");
+	shared_ptr<Sprite> live_sprite =
+		make_shared<Sprite>(anim_ptr->GetWidth(), anim_ptr->GetHeight(), anim_ptr);
+	bonus->SetSprite(live_sprite);
+	bonus->SetScale(0.06f);
+
+	((Bonus*)bonus.get())->AddListener(&mPlayer);
+
+	return bonus;
+} 
 
 void Asteroids::CreateGUI()
 {
@@ -261,6 +300,7 @@ void Asteroids::OnPlayerKilled(int lives_left)
 	shared_ptr<GameObject> explosion = CreateExplosion();
 	explosion->SetPosition(mSpaceship->GetPosition());
 	explosion->SetRotation(mSpaceship->GetRotation());
+	explosion->SetScale(0.5f);
 	mGameWorld->AddObject(explosion);
 
 	// Format the lives left message using an string-based stream
@@ -279,6 +319,67 @@ void Asteroids::OnPlayerKilled(int lives_left)
 		SetTimer(500, SHOW_GAME_OVER);
 	}
 }
+
+/*void Asteroids::saveScore() {
+	int score = mScoreKeeper.getScore();
+
+	std::ofstream scoreFile("scores.txt", std::ios_base::app | std::ios_base::out);
+
+	scoreFile << score << "\n";
+	scoreFile.close();
+
+} */
+
+
+/* 
+void Asteroids::readTop5HighScore() {
+
+	vector<int> scores;
+	std::ifstream file("scores.txt");
+	if (file.is_open()) {
+		std::string line;
+		while (std::getline(file, line)) {
+			int score = atoi(line.c_str());
+			scores.push_back(score);
+		}
+		file.close();
+
+		std::sort(scores.begin(), scores.end());
+
+		float y = 0.9f;
+		int num = 1;
+		for (int i = scores.size() - 1; i > scores.size() - 6 && i >= 0; i--,num++) {
+			shared_ptr<GUILabel> scoreLabel;
+			scoreLabel = make_shared<GUILabel>(to_string(num) + " : " + to_string(scores[i]));
+			scoreLabel->SetVerticalAlignment(GUIComponent::GUI_VALIGN_TOP);
+			shared_ptr<GUIComponent> score_component
+				= static_pointer_cast<GUIComponent>(scoreLabel);
+			mGameDisplay->GetContainer()->AddComponent(score_component, GLVector2f(0.1f, y));
+			y -= 0.1f;
+		}
+	}
+}
+*/
+
+/*
+void Asteroids::OnUpdateLive(int lives_left)
+{
+	std::ostringstream msg_stream;
+	msg_stream << "Lives: " << lives_left;
+	// Get the lives left message as a string
+	std::string lives_msg = msg_stream.str();
+	mLivesLabel->SetText(lives_msg);
+}
+
+void Asteroids::OnEnemyKilled(int lives_left)
+{
+	shared_ptr<GameObject> explosion = CreateExplosion();
+	explosion->SetPosition(mEnemySpaceship->GetPosition());
+	explosion->SetRotation(mEnemySpaceship->GetRotation());
+	explosion->SetScale(0.5f);
+	mGameWorld->AddObject(explosion);
+}
+*/
 
 shared_ptr<GameObject> Asteroids::CreateExplosion()
 {
