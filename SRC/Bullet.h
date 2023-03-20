@@ -8,7 +8,9 @@ class Bullet : public GameObject
 {
 public:
 	Bullet();
+	Bullet(const char* typeName);
 	Bullet(GLVector3f p, GLVector3f v, GLVector3f a, GLfloat h, GLfloat r, int ttl);
+	Bullet(const char* typeName, GLVector3f p, GLVector3f v, GLVector3f a, GLfloat h, GLfloat r, int ttl);
 	Bullet(const Bullet& b);
 	virtual ~Bullet(void);
 

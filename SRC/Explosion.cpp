@@ -9,7 +9,7 @@ Explosion::Explosion() : GameObject("Explosion") {}
 
 /** Construct a new explosion with given position, velocity, angle and rotation. */
 Explosion::Explosion(GLVector3f p, GLVector3f v, GLfloat h, GLfloat r)
-: GameObject("Explosion", p, v, GLVector3f(), h, r) {}
+	: GameObject("Explosion", p, v, GLVector3f(), h, r) {}
 
 /** Copy constructor. */
 Explosion::Explosion(const Explosion& e) : GameObject(e) {}
