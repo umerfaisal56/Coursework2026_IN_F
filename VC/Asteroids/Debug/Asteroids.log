@@ -4,15 +4,9 @@
   Explosion.cpp
   Bullet.cpp
   Asteroids.cpp
+C:\Users\umerf\OneDrive\Documents\GamesTech\Coursework2026_IN\src\Asteroids.cpp(163,26): error C3861: 'CreateBonus': identifier not found
+C:\Users\umerf\OneDrive\Documents\GamesTech\Coursework2026_IN\src\Asteroids.cpp(237,35): error C2039: 'CreateBonus': is not a member of 'Asteroids'
+C:\Users\umerf\OneDrive\Documents\GamesTech\Coursework2026_IN\src\Asteroids.h(22,7): message : see declaration of 'Asteroids'
+C:\Users\umerf\OneDrive\Documents\GamesTech\Coursework2026_IN\src\Asteroids.cpp(247,38): error C2065: 'mPlayer': undeclared identifier
   Asteroid.cpp
   Generating Code...
-Asteroid.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/SAFESEH' specification
-  Asteroids.vcxproj -> C:\Users\umerf\OneDrive\Documents\GamesTech\IN2026 Coursework Code\bin\Asteroids.exe
-  ..\..\assets\asteroid.shape
-  ..\..\assets\asteroid1_fs.png
-  ..\..\assets\bullet.shape
-  ..\..\assets\explosion_fs.png
-  ..\..\assets\spaceship.shape
-  ..\..\assets\spaceship_fs.png
-  ..\..\assets\thruster.shape
-          7 file(s) copied.
