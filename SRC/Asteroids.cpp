@@ -15,7 +15,7 @@
 // PUBLIC INSTANCE CONSTRUCTORS ///////////////////////////////////////////////
 
 /** Constructor. Takes arguments from command line, just in case. */
-Asteroids::Asteroids(int argc, char* argv[])
+Asteroids::Asteroids(int argc, char *argv[])
 	: GameSession(argc, argv)
 {
 	mLevel = 0;
@@ -124,13 +124,13 @@ void Asteroids::OnSpecialKeyPressed(int key, int x, int y)
 {
 	switch (key)
 	{
-		// If up arrow key is pressed start applying forward thrust
+	// If up arrow key is pressed start applying forward thrust
 	case GLUT_KEY_UP: mSpaceship->Thrust(10); break;
-		// If left arrow key is pressed start rotating anti-clockwise
+	// If left arrow key is pressed start rotating anti-clockwise
 	case GLUT_KEY_LEFT: mSpaceship->Rotate(90); break;
-		// If right arrow key is pressed start rotating clockwise
+	// If right arrow key is pressed start rotating clockwise
 	case GLUT_KEY_RIGHT: mSpaceship->Rotate(-90); break;
-		// Default case - do nothing
+	// Default case - do nothing
 	default: break;
 	}
 }
@@ -139,15 +139,15 @@ void Asteroids::OnSpecialKeyReleased(int key, int x, int y)
 {
 	switch (key)
 	{
-		// If up arrow key is released stop applying forward thrust
+	// If up arrow key is released stop applying forward thrust
 	case GLUT_KEY_UP: mSpaceship->Thrust(0); break;
-		// If left arrow key is released stop rotating
+	// If left arrow key is released stop rotating
 	case GLUT_KEY_LEFT: mSpaceship->Rotate(0); break;
-		// If right arrow key is released stop rotating
+	// If right arrow key is released stop rotating
 	case GLUT_KEY_RIGHT: mSpaceship->Rotate(0); break;
-		// Default case - do nothing
+	// Default case - do nothing
 	default: break;
-	}
+	} 
 }
 
 
@@ -178,16 +178,16 @@ void Asteroids::OnObjectRemoved(GameWorld* world, shared_ptr<GameObject> object)
 				mAsteroidCount++;
 			}
 		}
-
+		
 
 		mGameWorld->AddObject(explosion);
 		mAsteroidCount--;
 		if (mAsteroidCount == 5) {
 			mGameWorld->AddObject(CreateBonus());
 		}
-		if (mAsteroidCount <= 0)
-		{
-			SetTimer(500, START_NEXT_LEVEL);
+		if (mAsteroidCount <= 0) 
+		{ 
+			SetTimer(500, START_NEXT_LEVEL); 
 		}
 	}
 }
@@ -230,7 +230,7 @@ shared_ptr<GameObject> Asteroids::CreateSpaceship()
 	mSpaceship->SetBoundingShape(make_shared<BoundingSphere>(mSpaceship->GetThisPtr(), 4.0f));
 	shared_ptr<Shape> bullet_shape = make_shared<Shape>("bullet.shape");
 	mSpaceship->SetBulletShape(bullet_shape);
-	Animation* anim_ptr = AnimationManager::GetInstance().GetAnimationByName("spaceship");
+	Animation *anim_ptr = AnimationManager::GetInstance().GetAnimationByName("spaceship");
 	shared_ptr<Sprite> spaceship_sprite =
 		make_shared<Sprite>(anim_ptr->GetWidth(), anim_ptr->GetHeight(), anim_ptr);
 	mSpaceship->SetSprite(spaceship_sprite);
@@ -253,7 +253,7 @@ shared_ptr<GameObject> Asteroids::CreateEnemySpaceship()
 		make_shared<Sprite>(anim_ptr->GetWidth(), anim_ptr->GetHeight(), anim_ptr);
 	mEnemySpaceship->SetSprite(spaceship_sprite);
 	mEnemySpaceship->SetScale(0.1f);
-	mEnemySpaceship->SetPosition(GLVector3f(-200.0f, -200.0f, 0));
+	mEnemySpaceship->SetPosition(GLVector3f(-200.0f, -200.0f,0));
 	// Reset spaceship back to centre of the world
 	//mEnemySpaceship->Reset();
 	// Return the spaceship so it can be added to the world
@@ -282,7 +282,7 @@ void Asteroids::CreateAsteroids(const uint num_asteroids)
 	mAsteroidCount = num_asteroids;
 	for (uint i = 0; i < num_asteroids; i++)
 	{
-		Animation* anim_ptr = AnimationManager::GetInstance().GetAnimationByName("asteroid1");
+		Animation *anim_ptr = AnimationManager::GetInstance().GetAnimationByName("asteroid1");
 		shared_ptr<Sprite> asteroid_sprite
 			= make_shared<Sprite>(anim_ptr->GetWidth(), anim_ptr->GetHeight(), anim_ptr);
 		asteroid_sprite->SetLoopAnimation(true);
@@ -355,9 +355,9 @@ void Asteroids::OnPlayerKilled(int lives_left)
 	std::string lives_msg = msg_stream.str();
 	mLivesLabel->SetText(lives_msg);
 
-	if (lives_left > 0)
-	{
-		SetTimer(1000, CREATE_NEW_PLAYER);
+	if (lives_left > 0) 
+	{ 
+		SetTimer(1000, CREATE_NEW_PLAYER); 
 	}
 	else
 	{
@@ -390,7 +390,7 @@ void Asteroids::readTop5HighScore() {
 
 		float y = 0.9f;
 		int num = 1;
-		for (int i = scores.size() - 1; i > scores.size() - 6 && i >= 0; i--, num++) {
+		for (int i = scores.size() - 1; i > scores.size() - 6 && i >= 0; i--,num++) {
 			shared_ptr<GUILabel> scoreLabel;
 			scoreLabel = make_shared<GUILabel>(to_string(num) + " : " + to_string(scores[i]));
 			scoreLabel->SetVerticalAlignment(GUIComponent::GUI_VALIGN_TOP);
@@ -422,7 +422,7 @@ void Asteroids::OnEnemyKilled(int lives_left)
 
 shared_ptr<GameObject> Asteroids::CreateExplosion()
 {
-	Animation* anim_ptr = AnimationManager::GetInstance().GetAnimationByName("explosion");
+	Animation *anim_ptr = AnimationManager::GetInstance().GetAnimationByName("explosion");
 	shared_ptr<Sprite> explosion_sprite =
 		make_shared<Sprite>(anim_ptr->GetWidth(), anim_ptr->GetHeight(), anim_ptr);
 	explosion_sprite->SetLoopAnimation(false);

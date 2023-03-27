@@ -7,8 +7,9 @@
 #include "GameObjectType.h"
 #include "IPlayerListener.h"
 #include "IGameWorldListener.h"
+#include "ILiveBonusListener.h"
 
-class Player : public IGameWorldListener
+class Player : public IGameWorldListener,public ILiveBonusListener
 {
 public:
 	Player() { mLives = 3; }
@@ -23,6 +24,14 @@ public:
 		if (object->GetType() == GameObjectType("Spaceship")) {
 			mLives -= 1;
 			FirePlayerKilled();
+		}
+	}
+
+	void onEatBonus() {
+		mLives += 1;
+		for (PlayerListenerList::iterator lit = mListeners.begin();
+			lit != mListeners.end(); ++lit) {
+			(*lit)->OnUpdateLive(mLives);
 		}
 	}
 

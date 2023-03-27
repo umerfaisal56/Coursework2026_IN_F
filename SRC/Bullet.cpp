@@ -5,14 +5,13 @@
 // PUBLIC INSTANCE CONSTRUCTORS ///////////////////////////////////////////////
 
 /** Constructor. Bullets live for 2s by default. */
-// Changed it to 3s
 Bullet::Bullet()
-	: GameObject("Bullet"), mTimeToLive(3000)
+	: GameObject("Bullet"), mTimeToLive(2000)
 {
 }
 
 Bullet::Bullet(const char* typeName)
-	:GameObject(typeName), mTimeToLive(3000)
+	:GameObject(typeName), mTimeToLive(2000)
 {
 }
 
@@ -30,7 +29,7 @@ Bullet::Bullet(const char* typeName, GLVector3f p, GLVector3f v, GLVector3f a, G
 /** Copy constructor. */
 Bullet::Bullet(const Bullet& b)
 	: GameObject(b),
-	mTimeToLive(b.mTimeToLive)
+	  mTimeToLive(b.mTimeToLive)
 {
 }
 
