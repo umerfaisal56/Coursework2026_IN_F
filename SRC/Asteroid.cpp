@@ -26,6 +26,8 @@ bool Asteroid::CollisionTest(shared_ptr<GameObject> o)
 	if (o->GetType() == GameObjectType("Bonus")) return false;
 	if (o->GetType() == GameObjectType("EnemySpaceship")) return false;
 	if (o->GetType() == GameObjectType("EnemyBullet")) return false;
+	if (o->GetType() == GameObjectType("bonusLive")) return false;
+	if (o->GetType() == GameObjectType("bonusBounceBullet")) return false;
 	if (o->GetType() == GameObjectType("Spaceship")) {
 		shared_ptr<Spaceship> ship = std::dynamic_pointer_cast<Spaceship>(o);
 		if (ship.get()->getNoCollideTime() > 0) {

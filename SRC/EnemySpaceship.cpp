@@ -144,6 +144,8 @@ bool EnemySpaceship::CollisionTest(shared_ptr<GameObject> o)
 {
 	if (o->GetType() == GameObjectType("Asteroid")) return false;
 	if (o->GetType() == GameObjectType("EnemyBullet")) return false;
+	if (o->GetType() == GameObjectType("bonusLive")) return false;
+	if (o->GetType() == GameObjectType("bonusBounceBullet")) return false;
 	if (mBoundingShape.get() == NULL) return false;
 	if (o->GetBoundingShape().get() == NULL) return false;
 	return mBoundingShape->CollisionTest(o->GetBoundingShape());
