@@ -17,7 +17,7 @@ public:
 	GameObject(const GameObject& o);
 	virtual ~GameObject(void);
 
-	void Reset();
+	virtual void Reset();
 
 	virtual void Update(int t);
 	virtual void PreRender(void);

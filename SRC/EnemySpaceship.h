@@ -32,9 +32,12 @@ public:
 
 	void FireEnemyKilled();
 	void AddListener(shared_ptr<IEnemyListener> listener);
+	void setLives(int l) {
+		mLives = l;
+	}
 
 private:
-	//int mLives = 3;
+	int mLives = 4;
 	float shootTime = 0;
 	float rotateTime = 0;
 	float thrustTime = 0;

@@ -2,6 +2,7 @@
 #include "GameUtil.h"
 #include "Asteroid.h"
 #include "BoundingShape.h"
+#include "Spaceship.h"
 
 Asteroid::Asteroid(void) : GameObject("Asteroid")
 {
@@ -25,6 +26,12 @@ bool Asteroid::CollisionTest(shared_ptr<GameObject> o)
 	if (o->GetType() == GameObjectType("Bonus")) return false;
 	if (o->GetType() == GameObjectType("EnemySpaceship")) return false;
 	if (o->GetType() == GameObjectType("EnemyBullet")) return false;
+	if (o->GetType() == GameObjectType("Spaceship")) {
+		shared_ptr<Spaceship> ship = std::dynamic_pointer_cast<Spaceship>(o);
+		if (ship.get()->getNoCollideTime() > 0) {
+			return false;
+		}
+	}
 	if (mBoundingShape.get() == NULL) return false;
 	if (o->GetBoundingShape().get() == NULL) return false;
 	return mBoundingShape->CollisionTest(o->GetBoundingShape());

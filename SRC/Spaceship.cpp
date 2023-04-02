@@ -38,19 +38,49 @@ void Spaceship::Update(int t)
 {
 	// Call parent update function
 	GameObject::Update(t);
+
+	float dt = t / 1000.0f;
+	this->dt = dt;
+
+	if (mNoCollideTime > 0) {
+		mNoCollideTime -= dt;
+	}
+
+	if (bounceBulletTime > 0) {
+		bounceBulletTime -= dt;
+	}
+
 }
+
+
 
 /** Render this spaceship. */
 void Spaceship::Render(void)
 {
-	if (mSpaceshipShape.get() != NULL) mSpaceshipShape->Render();
+	if (mNoCollideTime > 0) {
+		flashTime += dt;
+		if (flashTime >= 0.001) {
+			flashTime = 0;
+			if (mSpaceshipShape.get() != NULL) mSpaceshipShape->Render();
 
-	// If ship is thrusting
-	if ((mThrust > 0) && (mThrusterShape.get() != NULL)) {
-		mThrusterShape->Render();
+			// If ship is thrusting
+			if ((mThrust > 0) && (mThrusterShape.get() != NULL)) {
+				mThrusterShape->Render();
+			}
+			GameObject::Render();
+		}
+
 	}
+	else {
+		if (mSpaceshipShape.get() != NULL) mSpaceshipShape->Render();
 
-	GameObject::Render();
+		// If ship is thrusting
+		if ((mThrust > 0) && (mThrusterShape.get() != NULL)) {
+			mThrusterShape->Render();
+		}
+
+		GameObject::Render();
+	}
 }
 
 /** Fire the rockets. */
@@ -83,20 +113,46 @@ void Spaceship::Shoot(void)
 	// Construct a vector for the bullet's velocity
 	GLVector3f bullet_velocity = mVelocity + spaceship_heading * bullet_speed;
 	// Construct a new bullet
-	shared_ptr<GameObject> bullet
+
+	if (bounceBulletTime > 0) {
+		shared_ptr<GameObject> bullet
+		(new Bullet(bullet_position, bullet_velocity, mAcceleration, mAngle, 0, 2000,true));
+		bullet->SetBoundingShape(make_shared<BoundingSphere>(bullet->GetThisPtr(), 2.0f));
+		mBulletShape->setRGBColour(1.0, 1.0, 0.1);
+		bullet->SetShape(mBulletShape);
+		// Add the new bullet to the game world
+		mWorld->AddObject(bullet);
+	}
+	else {
+		shared_ptr<GameObject> bullet
 		(new Bullet(bullet_position, bullet_velocity, mAcceleration, mAngle, 0, 2000));
-	bullet->SetBoundingShape(make_shared<BoundingSphere>(bullet->GetThisPtr(), 2.0f));
-	bullet->SetShape(mBulletShape);
-	// Add the new bullet to the game world
-	mWorld->AddObject(bullet);
+		bullet->SetBoundingShape(make_shared<BoundingSphere>(bullet->GetThisPtr(), 2.0f));
+		mBulletShape->setRGBColour(0.1, 1.0, 0.8);
+		bullet->SetShape(mBulletShape);
+		// Add the new bullet to the game world
+		mWorld->AddObject(bullet);
+	}
+
+	
 
 }
 
+void Spaceship::setNoCollideTime(float t)
+{
+	mNoCollideTime = t;
+}
+
+
 bool Spaceship::CollisionTest(shared_ptr<GameObject> o)
 {
+	if (getNoCollideTime() > 0) {
+		return false;
+	}
+
 	if (o->GetType() == GameObjectType("Spaceship")) return false;
 	if (o->GetType() == GameObjectType("Bullet")) return false;
-	if (o->GetType() == GameObjectType("Bonus")) return false;
+	if (o->GetType() == GameObjectType("bonusLive")) return false;
+	if (o->GetType() == GameObjectType("bonusBounceBullet")) return false;
 	if (mBoundingShape.get() == NULL) return false;
 	if (o->GetBoundingShape().get() == NULL) return false;
 	return mBoundingShape->CollisionTest(o->GetBoundingShape());
@@ -105,4 +161,9 @@ bool Spaceship::CollisionTest(shared_ptr<GameObject> o)
 void Spaceship::OnCollision(const GameObjectList &objects)
 {
 	mWorld->FlagForRemoval(GetThisPtr());
+}
+
+void Spaceship::onEatBonus()
+{
+	bounceBulletTime = 10;
 }

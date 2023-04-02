@@ -3,6 +3,14 @@
 #include "Bullet.h"
 #include "EnemySpaceship.h"
 #include "BoundingSphere.h"
+#include <Windows.h>
+
+#define DBOUT( s )            \
+{                             \
+   std::ostringstream os_;    \
+   os_ << s;                   \
+   OutputDebugString( os_.str().c_str() );  \
+}
 
 using namespace std;
 
@@ -42,8 +50,12 @@ void EnemySpaceship::Update(int t)
 
 	shootTime += dt;
 	if (shootTime >= 1.f) {
+		if (rand() % 30 < 1) {
+			Shoot();
+		}
+	}
+	if (shootTime >= 1.5) {
 		shootTime = 0;
-		Shoot();
 	}
 
 	rotateTime += dt;
@@ -109,11 +121,19 @@ void EnemySpaceship::Shoot(void)
 	// Calculate how fast the bullet should travel
 	float bullet_speed = 30;
 	// Construct a vector for the bullet's velocity
-	GLVector3f bullet_velocity = mVelocity + spaceship_heading * bullet_speed;
+
+	GLVector3f targetPos = target.get()->GetPosition();
+	GLVector3f dir = GLVector3f(targetPos.x - mPosition.x, targetPos.y - mPosition.y,0);
+	spaceship_heading = mPosition + (dir * 4);
+	dir.normalize();
+
+
+	GLVector3f bullet_velocity = mVelocity + dir * bullet_speed;
 	// Construct a new bullet
 	shared_ptr<GameObject> bullet
 		(new Bullet("EnemyBullet", bullet_position, bullet_velocity, mAcceleration, mAngle, 0, 2000));
 	bullet->SetBoundingShape(make_shared<BoundingSphere>(bullet->GetThisPtr(), 2.0f));
+	mBulletShape->setRGBColour(1.0, 0.2, 0.2f);
 	bullet->SetShape(mBulletShape);
 	// Add the new bullet to the game world
 	mWorld->AddObject(bullet);
@@ -131,8 +151,11 @@ bool EnemySpaceship::CollisionTest(shared_ptr<GameObject> o)
 
 void EnemySpaceship::OnCollision(const GameObjectList &objects)
 {
-	mWorld->FlagForRemoval(GetThisPtr());
-	FireEnemyKilled();
+	mLives--;
+	if (mLives < 0) {
+		mWorld->FlagForRemoval(GetThisPtr());
+		FireEnemyKilled();
+	}
 }
 
 void EnemySpaceship::setTarget(shared_ptr<GameObject> target)
@@ -145,7 +168,7 @@ void EnemySpaceship::FireEnemyKilled()
 	// Send message to all listeners
 	for (EnemyListenerList::iterator lit = mListeners.begin();
 		lit != mListeners.end(); ++lit) {
-		(*lit)->OnEnemyKilled(0);
+		(*lit)->OnEnemyKilled(mLives);
 	}
 }
 

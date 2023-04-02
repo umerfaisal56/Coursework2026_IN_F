@@ -5,13 +5,14 @@
   EnemySpaceship.cpp
   Bullet.cpp
   Asteroids.cpp
-C:\Users\umerf\OneDrive\Documents\GamesTech\Coursework2026_IN\src\Asteroids.cpp(393,37): warning C4018: '>': signed/unsigned mismatch
+C:\Users\umerf\OneDrive\Documents\GamesTech\Coursework2026_IN\src\Asteroids.cpp(442,37): warning C4018: '>': signed/unsigned mismatch
   Asteroid.cpp
   Generating Code...
 Asteroid.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/SAFESEH' specification
   Asteroids.vcxproj -> C:\Users\umerf\OneDrive\Documents\GamesTech\Coursework2026_IN\bin\Asteroids.exe
   ..\..\assets\asteroid.shape
   ..\..\assets\asteroid1_fs.png
+  ..\..\assets\bb_fs.png
   ..\..\assets\bullet.shape
   ..\..\assets\enemy_fs.png
   ..\..\assets\explosion_fs.png
@@ -19,4 +20,4 @@ Asteroid.obj : warning LNK4075: ignoring '/EDITANDCONTINUE' due to '/SAFESEH' sp
   ..\..\assets\spaceship.shape
   ..\..\assets\spaceship_fs.png
   ..\..\assets\thruster.shape
-          9 file(s) copied.
+         10 file(s) copied.
